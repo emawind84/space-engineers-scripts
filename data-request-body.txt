@@ -1,0 +1,67 @@
+{
+  "version": true,
+  "size": 500,
+  "sort": [
+    {
+      "timestamp": {
+        "order": "desc",
+        "unmapped_type": "boolean"
+      }
+    }
+  ],
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "query_string": {
+            "query": "quantity:{-50000 TO 1000} AND NOT item_name.keyword:*2Item AND NOT item_name.keyword:*3Item AND NOT item_name.keyword:*4Item",
+            "analyze_wildcard": true
+          }
+        },
+        {
+          "range": {
+            "timestamp": {
+              "gte": "now-30m",
+              "lte": "now",
+              "format": "epoch_millis"
+            }
+          }
+        }
+      ],
+      "must_not": []
+    }
+  },
+  "_source": {
+    "excludes": []
+  },
+  "aggs": {
+    "2": {
+      "date_histogram": {
+        "field": "timestamp",
+        "interval": "30s",
+        "time_zone": "Asia/Tokyo",
+        "min_doc_count": 1
+      }
+    }
+  },
+  "stored_fields": [
+    "*"
+  ],
+  "script_fields": {
+    "item_name.typed": {
+      "script": {
+        "inline": "return doc['item_name.keyword'].value + '_' + doc['type.keyword'].value;",
+        "lang": "painless"
+      }
+    },
+	"quantity.zerocap": {
+      "script": {
+        "inline": "if (doc['quantity'].value < 0) {return 0;}\nreturn doc['quantity'].value;",
+        "lang": "painless"
+      }
+    }
+  },
+  "docvalue_fields": [
+    "timestamp"
+  ]
+}
