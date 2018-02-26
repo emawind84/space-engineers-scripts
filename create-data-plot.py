@@ -19,6 +19,33 @@ _logger.setLevel(logging.DEBUG)
 
 now = datetime.utcnow()
 
+# friendly items name
+fin = {
+    "PreciseAutomaticRifleItem": "Precise Aut. Rifle",
+    "UltimateAutomaticRifleItem": "Ultimate Aut. Rifle",
+    "RapidFireAutomaticRifleItem": "Rapid Fire Aut. Rifle",
+    "AutomaticRifleItem": "Automatic Rifle",
+    "AngleGrinderItem": "Angle Grinder",
+    "InteriorPlate": "Interior Plate",
+    "LargeTube": "Large Steel Tube",
+    "SmallTube": "Small Steel Tube",
+    "MetalGrid": "Metal Grid",
+    "HandDrillItem": "Hand Drill",
+    "SolarCell": "Solar Cell",
+    "Steel Plate": "Steel Plate",
+    "BulletproofGlass": "Bulletproof Glass",
+    "HydrogenBottle": "Hydrogen Bottle",
+    "OxygenBottle": "Oxygen Bottle",
+    "Medical": "Medical Comp.",
+    "WelderItem": "Welder",
+    "Thrust": "Thruster Comp.",
+    "Reactor": "Reactor Comp.",
+    "Construction": "Construction Comp.",
+    "GravityGenerator": "Gravity Generator",
+    "RadioCommunication": "Radio Communication",
+    "PowerCell": "Power Cell"
+}
+
 plot_dir = 'plot'
 if not os.path.exists(plot_dir):
     os.makedirs(plot_dir)
@@ -46,7 +73,7 @@ def create_plot(market):
                 item_name += " Ore"
             elif item_type == "MyObjectBuilder_Ingot":
                 item_name += " Ingot"
-            items_name.append(item_name)
+            items_name.append(fin.get(item_name, item_name))
 
     fig, ax = plt.subplots(figsize=(12,6))
     opacity = 0.4
@@ -60,7 +87,7 @@ def create_plot(market):
     ax.set_xticks(index + bar_width / 2)
     ax.set_xticklabels(items_name)
     
-    ax.text(0.95, 0.95, 'Last update: %s' % now.strftime('%Y-%m-%d %H:%M:%S UTC'),
+    ax.text(0.98, 0.95, 'Updated on %s' % now.strftime('%Y-%m-%d %H:%M:%S UTC'),
         verticalalignment='bottom', horizontalalignment='right',
         transform=ax.transAxes,
         color='grey', fontsize=10)
